@@ -4,9 +4,16 @@ We sincerely thank our referees.
 
 **Q1. Prioritizing high‑frequency errors & impact of variant count per error type.**
 - We analyze error types from an known error set. However, we deliberately avoid prioritizing high-frequency errors in this error set, as its distribution may differ from that of unseen test data. To ensure broad coverage, we aim to include even low-frequency error types that may become more prevalent in unseen test data.
-Our approach is flexible and can be adapted. If a user wishes to focus only on high-frequency errors, they can filter out low-frequency ones and generate variants accordingly. 
+Our approach is flexible and can be adapted. If users wish to focus only on high-frequency errors, they can filter out low-frequency ones and generate variants accordingly. 
 
-Regarding the number of variants, we generate approximately equal numbers for each error type rather than allocating more to high-frequency errors. This is because we assume no prior knowledge of error frequency in unseen test data, improving general applicability. Generating more variants for a specific error type can improve model performance due to increased training data. However, for fair comparison with baseline methods, we limit the total number of generated variants to ensure our fine-tuning data sizes do not exceed baselines.
+- The number of variants per error type can influence performance improvements, i.e. using more training data can improve model performance. While allocating more variants to specific errors could further improve results, we limit the total number of generated variants to ensure a fair comparison. Specifically, the fine-tuning data volume for our method does not exceed that of any baseline.
+Additionally, we generate approximately equal numbers of variants per error type, assuming no prior knowledge of real-world error distributions. 
+
+- We analyze error types from a known error set. However, we deliberately avoid prioritizing high-frequency errors within this set, as its distribution may differ from that of real-world test scenarios. To ensure broad coverage, we include even low-frequency error types, which may become more prominent in unseen environments. Our approach is flexible: users can filter out low-frequency errors and generate variants only for high-frequency types if desired.
+
+- The number of variants per error type can influence performance improvements, as more training data typically leads to better model performance. While allocating more variants to specific errors may further improve results, we intentionally limit the total number of generated variants to ensure a fair comparison. Specifically, the fine-tuning data volume for our method does not exceed that of any baseline. Additionally, we allocate approximately equal numbers of variants per error type, assuming no prior knowledge of real-world error distributions.
+
+
 
 
 **Q2. CFGExplainer and related works.**
