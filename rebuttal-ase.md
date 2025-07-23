@@ -2,8 +2,12 @@ We sincerely thank our referees.
 
 **ReviewerA:**
 
-**Q1. Applicability to manual/automatic features.**
-- Our work is model-agnostic (see Sections 2.1, 2.3), and can be applied to models utilizing either manually selected features or automatically learned features, such as embeddings. To illustrate this versatility, we have evaluated models that employ automatically learned features, such as jTrans, XBA, and Trex.
+**Q1. Prioritizing high‑frequency errors & impact of variant count per error type.**
+- We analyze error types from an known error set. However, we deliberately avoid prioritizing high-frequency errors in this error set, as its distribution may differ from that of unseen test data. To ensure broad coverage, we aim to include even low-frequency error types that may become more prevalent in unseen test data.
+Our approach is flexible and can be adapted. If a user wishes to focus only on high-frequency errors, they can filter out low-frequency ones and generate variants accordingly. 
+
+Regarding the number of variants, we generate approximately equal numbers for each error type rather than allocating more to high-frequency errors. This is because we assume no prior knowledge of error frequency in unseen test data, improving general applicability. Generating more variants for a specific error type can improve model performance due to increased training data. However, for fair comparison with baseline methods, we limit the total number of generated variants to ensure our fine-tuning data sizes do not exceed baselines.
+
 
 **Q2. CFGExplainer and related works.**
 - The related works, e.g. CFGExplainer, are tailored for GNN-based classifiers, which are a subset of the models we evaluate. Our work is model-agnostic, and targets a broader range of models, including but not limited to GNNs, like Transformers. 
