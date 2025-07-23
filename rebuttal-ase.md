@@ -9,25 +9,14 @@ We sincerely thank our referees.
 
 
 
-**Q2. Impact of Parsing Errors.**
+**Q2. Parsing errors.**
 - Parsing errors are defined as violations of the expected template structure, which cause logically identical logs to map to different templates. This structural inconsistency introduces noise that degrades downstream tasks. For example, if some instances treat a field as one variable and others as two, the logically identical logs yield different templates. This inconsistency disrupts anomaly detection models that rely on template frequencies or sequences. Logically identical logs may be mapped to different templates, which introduces noise into the training data and reduces detection accuracy.
 
 
+**Q3. Threshold.**
+- We experimented with thresholds of 0.8, 0.85, 0.9, and 0.95. Based on manual inspection, a threshold of 0.9 achieved the best performance. Lower thresholds such as 0.8 tended to over-merge conceptually different errors, reducing interpretability. A higher threshold of 0.95 failed to group near-duplicate errors that differed only slightly in phrasing. 
 
 
-
-- More importantly, we focus on exploring the role of CFGs. It's crucial to distinguish CFG features from semantic features to clearly ascertain the role of CFGs. In contrast, related works can only identify significant function sub-parts encompassing a plethora of instructions. The conflation of CFGs with semantic features cannot reflect the independent role of CFGs.
-
-- Explaining ML-BFSD solutions diverges notably from explaining malware classifiers. Malware classifiers, based on classification tasks, produce outputs compatible with various explanation methods like CFGExplainer. Conversely, ML-BFSD solutions, rooted in contrastive learning, yield multi-dimensional feature vectors. These vectors are not readily suited for explanation methods used in malware classification. We claim this challenge in Section 3.2 (**Labeling training data**).
-
-- We'll discuss and cite the recommended papers.
-
-**Q3. $\delta$CFG.**
-- When basic blocks have the same number of direct successors, 
-we compute the path counts from these successors to the final block in CFGs. Blocks corresponding to successors with more paths are prioritized for matching. In cases where path counts are equal, blocks are randomly chosen for matching. Experimental results show that we can effectively manipulate all function pairs.
-
-
-- In most cases, the empty basic blocks are not disregarded. However, in a few rare instances, due to features with IDA disassembler, some empty basic blocks might disappear. To address this, we employ **grakel.kernels.WeisfeilerLehmanOptimalAssignment** to check whether the modified CFGs become identical/different. This approach filters out a few anomalies, ensuring function pairs' CFGs are manipulated as expected.
 
 
 **ReviewerB:**
