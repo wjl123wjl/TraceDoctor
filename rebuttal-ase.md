@@ -21,41 +21,46 @@ We sincerely thank our referees.
 
 **ReviewerB:**
 
-**Q1.What features now ML-BFSD rely on.**
-- Table 11 reveals enhanced models have become more reliant on semantic features, and the over-reliance on CFGs has been mitigated. However, we do not wish for any particular semantic feature to be overly relied upon, as this could make feature brittle and lead to errors. Results show the importance of each semantic feature has increased, with varying degrees across different models. Currently, there is no evidence of over-reliance on any specific semantic feature, suggesting they are not as brittle as CFG features, which aligns with our desired outcome.
+**Q1.Data leakage & .**
+- We fine-tune using only 50 logs from LogHub-2k, while LogHub-2.0 contains over 40 million logs. We ensure there is no data leakage by de-duplicating these 50 logs from the evaluation set in LogHub-2.0. We'll clarify this.
 
-**Q2.Convincing with experiments&robustness.**
-- We appreciate your suggestion and will design experiments to make our conclusions more convincing. E.g., we intend to improve the feature representation method in GEMINI and then observe the importance of these features. Additionally, we will devise new experiments to discuss the robustness of semantic features. E.g., we plan to use obfuscating instructions to equivalently replace existing instructions and observe their impact on models. 
+- More importantly, we compare against directly fine-tuning on the same 50 logs without any variant generation (Table III, Non-Aug in Section IV-C). The results show minimal performance improvement, indicating that these logs alone are insufficient to enhance model quality, further confirming no leakage or unfair advantage.
 
-**Q3.Why relying on them might be wrong.**
-- Over-reliance on CFGs implies that GNNs focus on learning the relationships between connected basic blocks, or those indirectly connected but spanning fewer blocks, which are depicted by CFGs. They struggle to learn relationships between basic blocks that are not directly connected and span multiple blocks, impacting their ability to understand the semantics of functions. E.g., there might be data dependency relations between non-directly connected basic blocks, which CFG cannot represent. The over-reliance hinders GNNs from learning semantics.
 
-**Q4.Introduction&DEXTER.**
-- We'll revise introduction and evaluate DEXTER.
+**Q2.Fairness of fine-tuning data selection.**
+- To address concerns about inconsistent data selection, we also substitute 50 logs in the baselines’ training data with the same 50 logs used by TraceDoctor. The baselines still underperform significantly. Combined with the Non-Aug results, this shows that our improvements are not due to specific log selection, but the effectiveness of our variant generation and error-driven fine-tuning strategy.
 
-**Q5.Additional comments.**
-- Yes, compilation variants.
 
-- In Table 3, "0~20%" range represents the similarity score decrease ratio, not the proportion of function pairs. E.g., on jTrans, 97.4% of function pairs show a similarity score decrease within 20%, indicating that most pairs remain relatively unchanged despite CFG modifications. This demonstrates jTrans's insensitivity to these changes, suggesting a limited reliance on CFGs. Conversely, in "20%~40%" range, only 1.8% of pairs exhibit this level of decrease, highlighting that significant changes in similarity scores are rare and likely due to model inherent errors, without impacting main conclusions. 
+**Q3.No ground truth templates.**
+- Fine-tuning-based log parsing methods inherently require labeled data (i.e., templates) during training. TraceDoctor follows this paradigm. In fact, most existing log parsing approaches, including non-fine-tuning methods, typically assume access to templates. Importantly, templates are only required during training. Once the model is fine-tuned, it can be deployed in real-world scenarios without relying on templates. We leave template-free fine-tuning as future work.
 
-- We'll refer to and cite the recommended work and revise Section 5.3. Previous works[52,70] show that metrics such as F-1 and ROC cannot adequately represent solution performance in real-world applications.
+**Q4.Verifiability.**
+- Our code is in:xxx, and prompts are in xxx.py, line xxx: 
+
+
 
 
 
 **ReviewerC:**
 
-**Q1.Feature.**
-- Our Explainer is based on LIME and LEMNA. They rely on model output changes by randomly deleting instructions. In this context, each instruction is represented by a binary value of 0 (removed) or 1 (retained). This binary representation is a specific requirement of these two explanation schemes. LIME and LEMNA necessitate that each dimension of the representation vector be a single scalar value, prohibiting the use of high-dimensional vectors, like embeddings, for instruction representation. Also, GNN embedding values of CFGs cannot be used.
+**Q1.Prompt&Code.**
+- Our code is in:xxx, and prompts are in xxx.py, line xxx: 
 
-- Due to the requirement for scalar values in each dimension of the vector, many abstract features (e.g. data flow dependencies) are hard to represent. Additionally, these methods require a fixed order of vector elements and do not support altering the sequence of elements. This means that observing the impact of changes in instruction order directly is hard. We focus on adapting existing explanation schemes to ML-BFSD. Improving existing explanation methods is not within our current scope and is left for future work.
-
-**Q2.Table2&downstream tasks.**
-- Explanation methods typically focus on relative importance scores rather than absolute values, emphasizing the comparative significance of features. E.g., if feature A has a score of 0.2 and feature B scores 0.4, it indicates that feature B is more important than A, rather than being exactly twice as important. Our use of LIME and LEMNA models for fitting may have influenced these outcomes. We plan to use more complex models for fitting and correct writing flaws. Additionally, we plan to apply the augmentation technique to real-world downstream applications.
-
-**ReviewerD:**
-- BinaryCorp-3M, derived from official ArchLinux packages and Arch User Repository, encompasses about 2000 projects, 10000 binaries, and 3.5 million functions. It is among the most extensive BCSD datasets available, notable for its function count, function type diversity, and project source variety. Unlike other datasets typically limited to a few projects, BinaryCorp-3M's functions span nearly 2000 projects, offering a closer representation of real-world scenarios. Results are expected to generalize to others.
-
-- Sorry for confusion. We'll clarify D measures cosine similarity; a high D indicates that x and x' are similar.
+**Q2.Selection of generation strategies.**
+- Log entries are composed of twocomponents: variables and constants.
+Thus, we designed three strategies to manipulate each component type (variables or constants), plus one that alters the entire semantic structure: (1) Variable substitution: Modifies only instance-level values while preserving the syntactic and semantic template. (2) Constant-inclusive Rewriting: Rewrites selected constants based on semantic surprisal, enabling deeper but still semantically faithful variation.
+(3) Semantic rewriting: Goes beyond structural edits to perform counterfactual rewriting, allowing broader exploration of error-triggering patterns beyond fixed templates.
+Together, these three strategies span the full spectrum: from localized edits to high-level semantic changes. This design ensures high coverage of potential error triggers while maintaining the interpretability and quality of the generated logs.
 
 
+- We considered and tested additional strategies, such as: Random token corruption: often produced invalid or unparseable logs with limited utility. Unconstrained log generation: lacked alignment with target error types and frequently generated irrelevant content.
+Preliminary experiments showed that these alternatives failed to produce effective fine-tuning signals, whereas our proposed strategies generated targeted, high-quality variations with significantly better error recall and parser improvement. Thus, we excluded these alternatives based on empirical performance and control concerns.
+We will clarify this in final version.
 
+
+
+**Q3. Rationale for choosing DeepSeek-V3-0324 in Analyzer.**
+- We adopt a commercial LLM in Analyzer and select DeepSeek-V3-0324 due to its strong performance, low cost, and fast response time. Our experiments show that most commercial LLMs are capable of understanding and summarizing natural language reasoning traces. For instance, we tested ChatGPT-4o and found that it produced nearly identical error types to DeepSeek-V3-0324. This indicates that the results are not sensitive to the choice of commercial LLMs. We ultimately choose DeepSeek-V3-0324 over ChatGPT-4o due to its lower cost and faster response time.
+
+**Q4.Categories.**
+- We do not manually specify the number of error categories. Instead, we adopt an automated strategy described in Section III-B, where the LLM first proposes a broad set of candidate types, and we then apply a semantic filtering process to remove redundant ones based on pairwise similarity. The final number of categories (29) is automatically derived through this process. Rather than tuning for a fixed category count, our method ensures semantic distinctiveness between retained types, thereby avoiding both over-fragmentation and over-merging. This mechanism implicitly controls the trade-off between granularity and performance
