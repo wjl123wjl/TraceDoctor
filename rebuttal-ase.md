@@ -3,20 +3,14 @@ We sincerely thank our referees.
 **ReviewerA:**
 
 **Q1. Prioritizing high‑frequency errors & impact of variant count per error type.**
-- We analyze error types from a known error set. However, we deliberately avoid prioritizing high-frequency errors within this set, as its distribution may differ from that of real-world test scenarios. To ensure broad coverage, we include even low-frequency error types, which may become more prominent in unseen environments. Our approach is flexible: users can filter out low-frequency errors and generate variants only for high-frequency types if desired.
+- We analyze error types from a known error set. However, we avoid prioritizing high-frequency errors within this set, as its distribution may differ from that of real-world test scenarios. Low-frequency error types may become more prominent in unseen environments. Our approach is flexible: users can filter out low-frequency errors and generate variants only for high-frequency types if desired.
 
 - The number of variants per error type can influence performance improvements, as more training data typically leads to better model performance. While allocating more variants to specific errors may further improve results, we limit the total number of generated variants to ensure a fair comparison. Specifically, the fine-tuning data volume for our method does not exceed that of any baseline. Additionally, we allocate approximately equal numbers of variants per error type, assuming no prior knowledge of real-world error distributions.
 
 
 
-
 **Q2. Impact of Parsing Errors.**
 - Parsing errors are defined as violations of the expected template structure, which cause logically identical logs to map to different templates. This structural inconsistency introduces noise that degrades downstream tasks. For example, if some instances treat a field as one variable and others as two, the logically identical logs yield different templates. This inconsistency disrupts anomaly detection models that rely on template frequencies or sequences. Logically identical logs may be mapped to different templates, which introduces noise into the training data and reduces detection accuracy.
-
-
-Parsing should consistently conform to the expected template structure. If some instances treat a field as a single variable while others split it into two, the parsing results no longer follow the same template and undermine the reliability of downstream tasks. For example, this inconsistency disrupts anomaly detection models that rely on template frequencies or sequences. Logically identical log events may be mapped to different templates, which introduces noise into the training data and reduces detection accuracy.
-
-
 
 
 
