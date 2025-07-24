@@ -35,22 +35,29 @@ We sincerely thank our referees.
 - Fine-tuning-based log parsing methods inherently require labeled data (i.e., templates) during training. TraceDoctor follows this paradigm. In fact, most existing log parsing approaches, including non-fine-tuning methods, typically assume access to templates. Importantly, templates are only required during training. Once the model is fine-tuned, it can be deployed in real-world scenarios without relying on templates. We leave template-free fine-tuning as future work.
 
 **Q4.Verifiability.**
-- Our code is in:xxx, and prompts are in xxx.py, line xxx: 
-
+- We have open-sourced our code, data, and prompts at: https://github.com/Trace-Doctor/TraceDoctor.
 
 
 
 
 **ReviewerC:**
 
-**Q1.Prompt&Code.**
-- Our code is in:xxx, and prompts are in xxx.py, line xxx: 
+**Q1.Code&data&prompts.**
+- All code, data and prompts are available at https://github.com/Trace-Doctor/TraceDoctor. 
 
 **Q2.Selection of generation strategies.**
-- Log entries are composed of twocomponents: variables and constants.
-Thus, we designed three strategies to manipulate each component type (variables or constants), plus one that alters the entire semantic structure: (1) Variable substitution: Modifies only instance-level values while preserving the syntactic and semantic template. (2) Constant-inclusive Rewriting: Rewrites selected constants based on semantic surprisal, enabling deeper but still semantically faithful variation.
-(3) Semantic rewriting: Goes beyond structural edits to perform counterfactual rewriting, allowing broader exploration of error-triggering patterns beyond fixed templates.
-Together, these three strategies span the full spectrum: from localized edits to high-level semantic changes. This design ensures high coverage of potential error triggers while maintaining the interpretability and quality of the generated logs.
+- Logs typically consist of constants and variables. Therefore, we design two strategies: Variable substitution and Constant-inclusive rewriting, which target these two components respectively. However, both strategies operate under the constraints of the original log structure and semantics. To enable broader perturbation beyond structural limitations, we introduce a third strategy, Semantic Rewriting, which allows altering the overall semantics of a log. Together, these three strategies comprehensively cover the key modifiable regions in logs. Other perturbation approaches can generally be regarded as subsets or combinations of these strategies.
+
+
+Logs are composed of two components: variables and constants.
+Thus, we design Variable substitution and Constant-inclusive rewriting to modify these two components correspondingly.
+Further, while previous two strageties introduce localized perturbations,
+they are inherently limited by the structure and semantics of
+the original logs. To enable broader exploration of error triggering patterns, we introduce a semantic rewriting strategy
+that allows changing log semantics to generate log variants.
+Together, these three strategies nearly coverage all the possible perturbation positions from high-level perspective.
+
+span the full spectrum: from localized edits to high-level semantic changes. This design ensures high coverage of potential error triggers while maintaining the interpretability and quality of the generated logs.
 
 
 - We considered and tested additional strategies, such as: Random token corruption: often produced invalid or unparseable logs with limited utility. Unconstrained log generation: lacked alignment with target error types and frequently generated irrelevant content.
