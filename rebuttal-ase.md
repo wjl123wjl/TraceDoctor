@@ -1,4 +1,4 @@
-We sincerely thank our referees. 
+We sincerely thank our referees. We have open-sourced our code, data, and prompts at: https://github.com/Trace-Doctor/TraceDoctor.
 
 **ReviewerA:**
 
@@ -35,7 +35,7 @@ We sincerely thank our referees.
 - Fine-tuning-based log parsing methods inherently require labeled data (i.e., templates) during training. TraceDoctor follows this paradigm. In fact, most existing log parsing approaches, including non-fine-tuning methods, typically assume access to templates. Importantly, templates are only required during training. Once the model is fine-tuned, it can be deployed in real-world scenarios without relying on templates. We leave template-free fine-tuning as future work.
 
 **Q4.Verifiability.**
-- We have open-sourced our code, data, and prompts at: https://github.com/Trace-Doctor/TraceDoctor.
+- TraceDoctor is available: https://github.com/Trace-Doctor/TraceDoctor.
 
 
 
@@ -43,19 +43,15 @@ We sincerely thank our referees.
 **ReviewerC:**
 
 **Q1.Code&data&prompts.**
-- All code, data and prompts are available at https://github.com/Trace-Doctor/TraceDoctor. 
+- All code, data and prompts are available: https://github.com/Trace-Doctor/TraceDoctor. 
 
 **Q2.Selection of generation strategies.**
-- We design these three strategies to cover all components within a log that can be reasonably modified, including constants, variables, structure, and semantics. To this end, alternative variant generation strageties should be as our subsets or combinations. Specifically, logs typically consist of constants and variables. Therefore, we design two strategies: Variable substitution and Constant-inclusive rewriting, which target these two components respectively. However, both strategies operate under the constraints of the original log structure and semantics. To enable broader perturbation beyond semantics and structural limitations, we introduce Semantic rewriting, which allows altering the overall semantics and structure of a log. Together, these three strategies comprehensively cover the key dimensions along which logs can be modified. Alternative perturbation approaches generally fall within this space, and can generally be regarded as subsets or combinations of these strategies.
-
-We design these strategies to cover all components within a log that can be reasonably modified, including constants, variables, structure, and semantics. Based on this coverage, alternative variant generation methods can be viewed as subsets or combinations of our strategies.
-Specifically, logs typically consist of constants and variables. To target these elements, we introduce two strategies: Variable substitution and constant-inclusive Rewriting. However, both strategies operate under the constraints of the original log structure and semantics. To enable broader perturbation beyond such constraints, we propose a third strategy, Semantic rewriting, which allows altering the overall semantics and structure of a log.
-Together, these three strategies comprehensively span the key dimensions along which logs can be perturbed. Other perturbation approaches typically fall within this space and can be considered subsets or compositions of our strategies.
-
-
+- We design these strategies to cover all components within a log that can be modified, including variables, constants, structure, and semantics. Based on this coverage, alternative variant generation methods can be viewed as subsets or combinations of our strategies.
+Specifically, logs typically consist of variables and constants. To target these elements, we introduce two strategies: Variable substitution and Constant-inclusive rewriting. However, both strategies operate under the constraints of the original log structure and semantics. To enable broader perturbation beyond such constraints, we propose a third strategy, Semantic rewriting, which allows altering the overall semantics and structure of a log.
+Together, these three strategies comprehensively span the key dimensions along which logs can be modified. Other generation approaches typically fall within this space and can be considered subsets or compositions of our strategies. We will clarify this in final version.
 
 **Q3. Rationale for choosing DeepSeek-V3-0324 in Analyzer.**
-- We adopt a commercial LLM in Analyzer and select DeepSeek-V3-0324 due to its strong performance, low cost, and fast response time. Our experiments show that most commercial LLMs are capable of understanding and summarizing natural language reasoning traces. For instance, we tested ChatGPT-4o and found that it produced nearly identical error types to DeepSeek-V3-0324. This indicates that the results are not sensitive to the choice of commercial LLMs. We ultimately choose DeepSeek-V3-0324 over ChatGPT-4o due to its lower cost and faster response time.
+- We adopt a commercial LLM in Analyzer and select DeepSeek-V3-0324 due to its strong performance, low cost, and fast response time. Our experiments show that most commercial LLMs are capable of understanding and summarizing natural language reasoning traces. For instance, we tested ChatGPT-4o and found that the results are not sensitive to the choice of commercial LLMs. For example, ChatGPT-4o produced nearly identical error types to DeepSeek-V3-0324. We ultimately choose DeepSeek-V3-0324 over ChatGPT-4o due to its lower cost and faster response time.
 
 **Q4.Categories.**
-- We do not manually specify the number of error categories. Instead, we adopt an automated strategy described in Section III-B, where the LLM first proposes a broad set of candidate types, and we then apply a semantic filtering process to remove redundant ones based on pairwise similarity. The final number of categories (29) is automatically derived through this process. Rather than tuning for a fixed category count, our method ensures semantic distinctiveness between retained types, thereby avoiding both over-fragmentation and over-merging. This mechanism implicitly controls the trade-off between granularity and performance
+- We do not manually specify the number of error categories. Instead, we adopt an automated strategy described in Section III-B, where the LLM first proposes a broad set of candidate types, and we then apply a semantic filtering process to remove redundant ones based on pairwise similarity. The final number of categories (29) is automatically derived through this process. Rather than tuning for a fixed category count, our method ensures semantic distinctiveness between retained types, thereby avoiding both over-fragmentation and over-merging. This mechanism implicitly controls the trade-off between granularity and performance. We also release the 29 distinct error types in our github link (29.md).
