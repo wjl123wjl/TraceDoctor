@@ -46,23 +46,11 @@ We sincerely thank our referees.
 - All code, data and prompts are available at https://github.com/Trace-Doctor/TraceDoctor. 
 
 **Q2.Selection of generation strategies.**
-- We design these three strategies to cover all components within a log that can be reasonably modified, including constants, variables, structure, and semantics. To this end, alternative variant generation strageties should be as our subsets or combinations. More specifically, logs typically consist of constants and variables. Therefore, we design two strategies: Variable substitution and Constant-inclusive rewriting, which target these two components respectively. However, both strategies operate under the constraints of the original log structure and semantics. To enable broader perturbation beyond semantics and structural limitations, we introduce a third strategy, Semantic rewriting, which allows altering the overall semantics and structure of a log. Together, these three strategies comprehensively cover the key dimensions along which logs can be modified, including structural, lexical, and semantic aspects. Alternative perturbation approaches generally fall within this space, and can generally be regarded as subsets or combinations of these strategies.
+- We design these three strategies to cover all components within a log that can be reasonably modified, including constants, variables, structure, and semantics. To this end, alternative variant generation strageties should be as our subsets or combinations. Specifically, logs typically consist of constants and variables. Therefore, we design two strategies: Variable substitution and Constant-inclusive rewriting, which target these two components respectively. However, both strategies operate under the constraints of the original log structure and semantics. To enable broader perturbation beyond semantics and structural limitations, we introduce Semantic rewriting, which allows altering the overall semantics and structure of a log. Together, these three strategies comprehensively cover the key dimensions along which logs can be modified. Alternative perturbation approaches generally fall within this space, and can generally be regarded as subsets or combinations of these strategies.
 
-
-Logs are composed of two components: variables and constants.
-Thus, we design Variable substitution and Constant-inclusive rewriting to modify these two components correspondingly.
-Further, while previous two strageties introduce localized perturbations,
-they are inherently limited by the structure and semantics of
-the original logs. To enable broader exploration of error triggering patterns, we introduce a semantic rewriting strategy
-that allows changing log semantics to generate log variants.
-Together, these three strategies nearly coverage all the possible perturbation positions from high-level perspective.
-
-span the full spectrum: from localized edits to high-level semantic changes. This design ensures high coverage of potential error triggers while maintaining the interpretability and quality of the generated logs.
-
-
-- We considered and tested additional strategies, such as: Random token corruption: often produced invalid or unparseable logs with limited utility. Unconstrained log generation: lacked alignment with target error types and frequently generated irrelevant content.
-Preliminary experiments showed that these alternatives failed to produce effective fine-tuning signals, whereas our proposed strategies generated targeted, high-quality variations with significantly better error recall and parser improvement. Thus, we excluded these alternatives based on empirical performance and control concerns.
-We will clarify this in final version.
+We design these strategies to cover all components within a log that can be reasonably modified, including constants, variables, structure, and semantics. Based on this coverage, alternative variant generation methods can be viewed as subsets or combinations of our strategies.
+Specifically, logs typically consist of constants and variables. To target these elements, we introduce two strategies: Variable substitution and constant-inclusive Rewriting. However, both strategies operate under the constraints of the original log structure and semantics. To enable broader perturbation beyond such constraints, we propose a third strategy, Semantic rewriting, which allows altering the overall semantics and structure of a log.
+Together, these three strategies comprehensively span the key dimensions along which logs can be perturbed. Other perturbation approaches typically fall within this space and can be considered subsets or compositions of our strategies.
 
 
 
