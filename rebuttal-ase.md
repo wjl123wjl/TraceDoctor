@@ -3,9 +3,9 @@ We sincerely thank our referees. We have open-sourced our code, data, and prompt
 **ReviewerA:**
 
 **Q1. Prioritizing high‑frequency errors & impact of variant count per error type.**
-- We analyze error types from a known error set. However, we avoid prioritizing high-frequency errors within this set, as its distribution may differ from that of real-world test scenarios. Low-frequency error types may become more prominent in unseen environments. Our approach is flexible: users can filter out low-frequency errors and generate variants only for high-frequency types if desired.
+- We analyze error types from a known error set. However, we avoid prioritizing high-frequency errors within this set, as its distribution may differ from that of unseen test scenarios. Low-frequency error types may become more prominent in unseen test scenarios. Our approach is flexible: users can filter out low-frequency errors and generate variants only for high-frequency types if desired.
 
-- The number of variants per error type can influence performance improvements, as more training data typically leads to better model performance. While allocating more variants to specific errors may further improve results, we limit the total number of generated variants to ensure a fair comparison. Specifically, the fine-tuning data volume for our method does not exceed that of any baseline. Additionally, we allocate approximately equal numbers of variants per error type, assuming no prior knowledge of real-world error distributions.
+- The number of variants per error type can influence performance improvements, as more training data typically leads to better model performance. While allocating more variants to specific errors may further improve results, we limit the total number of generated variants to ensure a fair comparison. Specifically, the fine-tuning data volume for our method does not exceed that of any baseline. Additionally, we allocate approximately equal numbers of variants per error type, assuming no prior knowledge of  error distributions of test scenarios.
 
 
 
@@ -57,7 +57,6 @@ Together, these three strategies comprehensively span the key dimensions along w
 - We determine the number of categories by identifying semantically different types of errors. As described in **Error categorization** (Section III-B), the LLM first proposes candidate error types. We then perform embedding-based similarity analysis to identify and remove semantically overlapping types. This process naturally determines the number of categories without manually tuning the category granularity. We do not explicitly control the granularity, as different datasets may exhibit different characteristics, and our goal is to develop an automatic and generalizable approach.
 To showcase the resulting error categorization quality, we release the 29 identified types in our GitHub repository (29.md).
 
-We determine the number of categories by identifying semantically different types of errors. As described in **Error categorization** (Section III-B), the LLM first proposes candidate error types. Then, we perform
-embedding-based similarity analysis to identify and remove semantically overlapping types. This process naturally determines the number of categories without manual tuning the category granularity. We do not explicitly tune the category granularity, as different datasets may exhibit different characteristic, and we aim an automatic and general approach. 
+
 
 
