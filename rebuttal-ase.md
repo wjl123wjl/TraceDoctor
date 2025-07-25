@@ -1,40 +1,49 @@
-We sincerely thank our referees. We have open-sourced our code, data, and prompts at: https://github.com/Trace-Doctor/TraceDoctor.
+We sincerely thank our referees. 
 
 **ReviewerA:**
 
-**Q1. Prioritizing high‑frequency errors & impact of variant count per error type.**
+**Q1. Threshold.**
+- We experimented with thresholds of 0.8, 0.85, 0.9, and 0.95. Based on manual inspection, a threshold of 0.9 achieved the best performance. Lower thresholds such as 0.8 tended to over-merge conceptually different errors, reducing interpretability. A higher threshold of 0.95 failed to group near-duplicate errors that differed only slightly in phrasing. 
+
+
+**Q2. Prioritizing high‑frequency errors & impact of variant count per type.**
 - We analyze error types from a known error set. However, we avoid prioritizing high-frequency errors within this set, as its distribution may differ from that of unseen test scenarios. Low-frequency error types may become more prominent in unseen test scenarios. Our approach is flexible: users can filter out low-frequency errors and generate variants only for high-frequency types if desired.
 
 - The number of variants per error type can influence performance improvements, as more training data typically leads to better model performance. While allocating more variants to specific errors may further improve results, we limit the total number of generated variants to ensure a fair comparison. Specifically, the fine-tuning data volume for our method does not exceed that of any baseline. Additionally, we allocate approximately equal numbers of variants per error type, assuming no prior knowledge of  error distributions of test scenarios.
 
-
-
-**Q2. Parsing errors.**
+**Q3. Parsing errors.**
 - Parsing errors are defined as violations of the expected template structure, which cause logically identical logs to map to different templates. This structural inconsistency introduces noise that degrades downstream tasks. For example, if some instances treat a field as one variable and others as two, the logically identical logs yield different templates. This inconsistency disrupts anomaly detection models that rely on template frequencies or sequences. Logically identical logs may be mapped to different templates, which introduces noise into the training data and reduces detection accuracy.
-
-
-**Q3. Threshold.**
-- We experimented with thresholds of 0.8, 0.85, 0.9, and 0.95. Based on manual inspection, a threshold of 0.9 achieved the best performance. Lower thresholds such as 0.8 tended to over-merge conceptually different errors, reducing interpretability. A higher threshold of 0.95 failed to group near-duplicate errors that differed only slightly in phrasing. 
-
 
 
 
 **ReviewerB:**
 
 **Q1.Data leakage.**
-- We select only 50 logs per system from LogHub-2k, whereas all baseline methods selects 200 logs per system. The evaluation is conducted on the full LogHub-2.0 benchmark, which contains over 40 million logs. We explicitly remove the fine-tuning logs from LogHub-2.0 before evaluation. This ensures that none of the logs used for fine-tuning appear in the evaluation phase. We will clarify this in final version.
 
+- To mitigate potential data leakage, we fine-tune using only 50 logs per system. This is significantly fewer than the 200 logs used by the baselines. These 50 logs also cover fewer templates, with an average of 14, compared to 24 to 29 templates in the baselines. In contrast, the evaluation set LogHub-2.0 contains over 40 million logs and on average 249 templates per system. This substantial gap in both the number of logs and template coverage reduces the likelihood that potential leakage could affect performance.
+In addition, we explicitly remove any fine-tuning logs from LogHub-2.0 prior to evaluation, ensuring that there is no overlap between the fine-tuning and evaluation data. We will clarify this in the final version.
+
+- To mitigate potential data leakage, we fine-tune with only 50 logs per system—much fewer than the 200 logs used by baselines. These 50 logs also cover fewer templates (14 on average), compared to 24–29 templates in baselines. Note that, the evaluation set  LogHub-2.0 contains over 40 million logs and on average 249 templates per system. 
+To this end, our smaller logs and template coverage makes leakage less likely to impact performance.
+Additoinally, we explicitly remove any fine-tuning logs from LogHub-2.0 before evaluation, ensuring that no overlap exists between the fine-tuning and evaluation data. We will clarify this in final version.
+
+
+This smaller coverage makes leakage less likely to impact performance. Additionally, we explicitly remove any overlapping logs from the evaluation set in LogHub-2.0 (which contains over 40 million logs and ~249 templates per system), ensuring a clean separation between training and evaluation. We will clarify this in the final version.
+
+- To avoid potential data leakage, we select only a small number of logs (50 per system) for fine-tuning, which is significantly fewer than the 200 logs used by baselines. The evaluation uses LogHub-2.0 (over 40 million logs). We explicitly remove any fine-tuning logs from LogHub-2.0 before evaluation, ensuring that no overlap exists between the fine-tuning and evaluation data. We will clarify this in final version.
 
 - More importantly, we include an ablation (Non-Aug in Table III, Section IV-C) that fine-tunes models directly on these 50 logs without any variant generation. The results show that this setting performs substantially worse than TraceDoctor, indicating that these logs alone are insufficient to improve model performance and are unlikely to confer unfair advantage.
 
 
+**Q2.Fine-tuning data selection.**
+- To address concerns about inconsistent data selection, we also substitute 50 logs in the baselines’ training data with the same 50 logs used by TraceDoctor. TraceDoctor consistently outperforms all baselines. For example, on DeepSeek-LLaMA3-8B, TraceDoctor achieves an average PA of 0.889 and GA of 0.848, while the baselines perform as follows:
+(1) LogParser: PA 0.790, GA 0.761 (2) Superlog: PA 0.746, GA 0.615 (3) LogLLM: PA 0.795, GA 0.787.
 
-**Q2.Fairness of fine-tuning data selection.**
-- To address concerns about inconsistent data selection, we also substitute 50 logs in the baselines’ training data with the same 50 logs used by TraceDoctor. The baselines still underperform significantly. Combined with the Non-Aug results, this shows that our improvements are not due to specific log selection, but the effectiveness of our variant generation and error-driven fine-tuning strategy.
+- Moreover, baselines cover more templates than TraceDoctor. First, they select 200 logs per system, while we only select 50. Second, some baselines explicitly aim to increase template diversity. For example, LogParser adopts clustering to cover diverse templates. In contrast, TraceDoctor selects logs based on model errors, not template coverage.
 
 
 **Q3.No ground truth templates.**
-- Fine-tuning-based log parsing methods inherently require labeled data (i.e., templates) during training. TraceDoctor follows this paradigm. In fact, most existing log parsing approaches, including non-fine-tuning methods, typically assume access to templates. Importantly, templates are only required during training. Once the model is fine-tuned, it can be deployed in real-world scenarios without relying on templates. We leave template-free fine-tuning as future work.
+- Fine-tuning-based methods inherently require labeled data (i.e., templates) during training. TraceDoctor follows this paradigm. In fact, most existing parsing approaches, including non-fine-tuning methods, typically assume access to templates. Importantly, templates are only required during training. Once the model is fine-tuned, TraceDoctor can be deployed in real-world scenarios without relying on templates. We leave template-free fine-tuning as future work.
 
 **Q4.Verifiability.**
 - TraceDoctor is available: https://github.com/Trace-Doctor/TraceDoctor.
@@ -57,7 +66,7 @@ Together, these three strategies comprehensively span the key dimensions along w
 
 **Q4.Categories.**
 - We determine the number of categories by identifying semantically different types of errors. As described in **Error categorization** (Section III-B), the LLM first proposes candidate error types. We then perform embedding-based similarity analysis to identify and remove semantically overlapping types. This process naturally determines the number of categories without manually tuning the category granularity. We do not explicitly control the granularity, as different datasets may exhibit different characteristics, and our goal is to develop an automatic and generalizable approach.
-To showcase the resulting error categorization quality, we release the 29 identified types in our GitHub repository (29.md).
+To showcase the resulting error categorization quality, we release the 29 identified types in our GitHub repository (high-level-error-types.md).
 
 
 
