@@ -21,10 +21,20 @@ We sincerely thank our referees. We have open-sourced our code, data, and prompt
 
 **ReviewerB:**
 
-**Q1.Data leakage & .**
-- We fine-tune using only 50 logs from LogHub-2k, while LogHub-2.0 contains over 40 million logs. We ensure there is no data leakage by de-duplicating these 50 logs from the evaluation set in LogHub-2.0. We'll clarify this.
+**Q1.Data leakage.**
+- We select only 50 logs per system from LogHub-2k, whereas all baseline methods use 200 logs per system. The evaluation is conducted on the full LogHub-2.0 benchmark, which contains over 40 million logs. To prevent potential overlap, we explicitly remove the fine-tuning logs from LogHub-2.0 before evaluation. 
 
-- More importantly, we compare against directly fine-tuning on the same 50 logs without any variant generation (Table III, Non-Aug in Section IV-C). The results show minimal performance improvement, indicating that these logs alone are insufficient to enhance model quality, further confirming no leakage or unfair advantage.
+- More importantly, we include an ablation (Non-Aug in Table III, Section IV-C) that fine-tunes models directly on these 50 logs without any variant generation. The results show that this setting performs substantially worse than TraceDoctor, indicating that these logs alone are insufficient to improve model quality and pose minimal risk of data leakage.
+
+
+Additionally, Table III (Non-Aug) shows that directly fine-tuning on these 50 logs without variant generation results in significantly worse performance than TraceDoctor, indicating that the raw logs alone provide limited benefit and are unlikely to confer unfair advantage.
+
+
+We explicitly remove the 50 fine-tuning logs from the full LogHub-2.0 benchmark before evaluation. This ensures that none of the logs used for fine-tuning appear in the evaluation phase. We will clarify this in final version.
+
+
+
+More importantly, we compare against directly fine-tuning on the same 50 logs without any variant generation (Table III, Non-Aug in Section IV-C). The results show minimal performance improvement, indicating that these logs alone are insufficient to enhance model quality, further confirming no leakage or unfair advantage. One reason is that we fine-tune using only 50 logs from LogHub-2k, while LogHub-2.0 contains over 40 million logs. Using 50 won
 
 
 **Q2.Fairness of fine-tuning data selection.**
