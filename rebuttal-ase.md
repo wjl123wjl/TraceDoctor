@@ -9,21 +9,20 @@ These two are semantically different but have a similarity score of 0.87. A thre
 
 
 **Q2. Prioritizing high‑frequency errors & impact of variant count per type.**
-- We analyze error types from a known error set. However, we avoid prioritizing high-frequency errors within this set, as its distribution may differ from that of unseen test scenarios. Low-frequency error types may become more prominent in unseen test scenarios. Our approach is flexible: users can filter out low-frequency errors and generate variants only for high-frequency types if desired.
+- We do not prioritize high-frequency errors within error set, as its distribution may differ from that of unseen test scenarios. Low-frequency error types may become more prominent in unseen test scenarios. Our approach is flexible: users can filter out low-frequency errors and generate variants only for high-frequency types if desired.
 
-- The number of variants per error type can influence performance improvements, as more training data typically leads to better model performance. While allocating more variants to specific errors may further improve results, we limit the total number of generated variants to ensure a fair comparison. Specifically, the fine-tuning data volume for our method does not exceed that of any baseline. Additionally, we allocate approximately equal numbers of variants per error type, assuming no prior knowledge of  error distributions of test scenarios.
+- The number of variants per error type can influence performance improvements, as more training data typically leads to better model performance. While allocating more variants to specific errors may further improve results, we limit the total number of generated variants to ensure a fair comparison. Specifically, the fine-tuning data volume for ours never exceeds that of any baseline. 
+
 
 **Q3. Error impacts.**
-- Parsing errors are defined as violations of the expected template structure, which cause logically identical logs to map to different templates. This structural inconsistency introduces noise that degrades downstream tasks. For example, if some instances treat a field as one variable and others as two, the logically identical logs yield different templates. This inconsistency disrupts anomaly detection models that rely on template frequencies or sequences. Logically identical logs may be mapped to different templates, which introduces noise into the training data and reduces detection accuracy.
-
+- Parsing errors can lead to inconsistencies in the resulting templates, which may degrade the performance of downstream tasks. For example, if one parser segments an IP and port into two variables while another treats them as a single variable, structurally identical logs will yield different templates. Such inconsistencies introduce noise into training data and reduce the reliability of downstream tasks such as anomaly detection, which often depend on stable template frequencies or sequences.
 
 
 **ReviewerB:**
 
 **Q1.Data leakage.**
 
-- To mitigate potential data leakage, we select only 50 logs per system. This is significantly fewer than the 200 logs used by baselines. These 50 logs also cover fewer templates, with an average of 14, compared to 25~31 templates in baselines. In contrast, the evaluation set LogHub-2.0 contains over 40 million logs and on average 249 templates per system. This significant discrepancy in both data volume and template coverage makes it unlikely that potential leakage would influence model performance.
-Additoinally, we explicitly remove any fine-tuning logs from LogHub-2.0 before evaluation, ensuring that no overlap exists between the fine-tuning and evaluation data. We will clarify this in final version.
+- To mitigate potential data leakage, we select only 50 logs per system. This is significantly fewer than the 200 logs used by baselines. These 50 logs also cover fewer templates, with an average of 14, compared to 25~31 templates in baselines. In contrast, the evaluation set LogHub-2.0 contains over 40 million logs and on average 249 templates per system. This significant discrepancy in both data volume and template coverage makes it unlikely that potential leakage would threaten the validity of our findings. Additoinally, we explicitly remove any fine-tuning logs from LogHub-2.0 before evaluation, ensuring that no overlap exists between the fine-tuning and evaluation data. We will clarify this in final version.
 
 - More importantly, we include an ablation (Non-Aug in Table III) that fine-tunes models directly on these 50 logs without any variant generation. Results show that Non-Aug performs substantially worse than TraceDoctor, indicating that these logs alone are insufficient to improve model performance and are unlikely to confer unfair advantage.
 
