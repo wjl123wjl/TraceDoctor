@@ -20,30 +20,21 @@ We sincerely thank our referees.
 
 **Q1.Data leakage.**
 
-- To mitigate potential data leakage, we fine-tune using only 50 logs per system. This is significantly fewer than the 200 logs used by the baselines. These 50 logs also cover fewer templates, with an average of 14, compared to 24 to 29 templates in the baselines. In contrast, the evaluation set LogHub-2.0 contains over 40 million logs and on average 249 templates per system. This substantial gap in both the number of logs and template coverage reduces the likelihood that potential leakage could affect performance.
-In addition, we explicitly remove any fine-tuning logs from LogHub-2.0 prior to evaluation, ensuring that there is no overlap between the fine-tuning and evaluation data. We will clarify this in the final version.
-
-- To mitigate potential data leakage, we fine-tune with only 50 logs per system—much fewer than the 200 logs used by baselines. These 50 logs also cover fewer templates (14 on average), compared to 24–29 templates in baselines. Note that, the evaluation set  LogHub-2.0 contains over 40 million logs and on average 249 templates per system. 
-To this end, our smaller logs and template coverage makes leakage less likely to impact performance.
+- To mitigate potential data leakage, we select only 50 logs per system. This is significantly fewer than the 200 logs used by baselines. These 50 logs also cover fewer templates, with an average of 14, compared to 25~31 templates in baselines. In contrast, the evaluation set LogHub-2.0 contains over 40 million logs and on average 249 templates per system. This significant discrepancy in both data volume and template coverage makes it unlikely that potential leakage would influence model performance.
 Additoinally, we explicitly remove any fine-tuning logs from LogHub-2.0 before evaluation, ensuring that no overlap exists between the fine-tuning and evaluation data. We will clarify this in final version.
 
-
-This smaller coverage makes leakage less likely to impact performance. Additionally, we explicitly remove any overlapping logs from the evaluation set in LogHub-2.0 (which contains over 40 million logs and ~249 templates per system), ensuring a clean separation between training and evaluation. We will clarify this in the final version.
-
-- To avoid potential data leakage, we select only a small number of logs (50 per system) for fine-tuning, which is significantly fewer than the 200 logs used by baselines. The evaluation uses LogHub-2.0 (over 40 million logs). We explicitly remove any fine-tuning logs from LogHub-2.0 before evaluation, ensuring that no overlap exists between the fine-tuning and evaluation data. We will clarify this in final version.
-
-- More importantly, we include an ablation (Non-Aug in Table III, Section IV-C) that fine-tunes models directly on these 50 logs without any variant generation. The results show that this setting performs substantially worse than TraceDoctor, indicating that these logs alone are insufficient to improve model performance and are unlikely to confer unfair advantage.
+- More importantly, we include an ablation (Non-Aug in Table III) that fine-tunes models directly on these 50 logs without any variant generation. Results show that Non-Aug performs substantially worse than TraceDoctor, indicating that these logs alone are insufficient to improve model performance and are unlikely to confer unfair advantage.
 
 
 **Q2.Fine-tuning data selection.**
 - To address concerns about inconsistent data selection, we also substitute 50 logs in the baselines’ training data with the same 50 logs used by TraceDoctor. TraceDoctor consistently outperforms all baselines. For example, on DeepSeek-LLaMA3-8B, TraceDoctor achieves an average PA of 0.889 and GA of 0.848, while the baselines perform as follows:
 (1) LogParser: PA 0.790, GA 0.761 (2) Superlog: PA 0.746, GA 0.615 (3) LogLLM: PA 0.795, GA 0.787.
 
-- Moreover, baselines cover more templates than TraceDoctor. First, they select 200 logs per system, while we only select 50. Second, some baselines explicitly aim to increase template diversity. For example, LogParser adopts clustering to cover diverse templates. In contrast, TraceDoctor selects logs based on model errors, not template coverage.
+- It is worth noting that baselines are exposed to more data (200 logs per system) and more diverse templates (25–31 on average) than TraceDoctor (50 logs and 14 templates). Some baselines explicitly aim to increase template diversity. For example, LogParser adopts clustering to cover diverse templates. In contrast, TraceDoctor selects logs based on model errors, not template coverage.
 
 
 **Q3.No ground truth templates.**
-- Fine-tuning-based methods inherently require labeled data (i.e., templates) during training. TraceDoctor follows this paradigm. In fact, most existing parsing approaches, including non-fine-tuning methods, typically assume access to templates. Importantly, templates are only required during training. Once the model is fine-tuned, TraceDoctor can be deployed in real-world scenarios without relying on templates. We leave template-free fine-tuning as future work.
+- Fine-tuning-based methods inherently require labels (templates) during training. TraceDoctor follows this paradigm. In fact, most existing parsing approaches, including non-fine-tuning methods, typically assume access to templates. Importantly, templates are only required during training. Once the model is fine-tuned, TraceDoctor can be deployed in real-world scenarios without relying on templates. We leave template-free fine-tuning as future work.
 
 **Q4.Verifiability.**
 - TraceDoctor is available: https://github.com/Trace-Doctor/TraceDoctor.
