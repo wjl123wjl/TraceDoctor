@@ -3,7 +3,9 @@ We sincerely thank our referees.
 **ReviewerA:**
 
 **Q1. Threshold.**
-- We experimented with thresholds of 0.8, 0.85, 0.9, and 0.95. Based on manual inspection, a threshold of 0.9 achieved the best performance. Lower thresholds such as 0.8 tended to over-merge conceptually different errors, reducing interpretability. A higher threshold of 0.95 failed to group near-duplicate errors that differed only slightly in phrasing. 
+- We experimented with thresholds of 0.85, 0.9, and 0.95. Based on manual inspection, a threshold of 0.9 achieved the best performance. Lower thresholds like 0.85 tend to over-merge distinct error types. For example, (1) Pattern Over-segmentation Issues: The model excessively splits logs into overly fine-grained templates, losing structural integrity. (2) Pattern Under-consolidation Problems: The model fails to group structurally similar logs into unified templates.
+These two are semantically different but have a similarity score of 0.87. A threshold of 0.85 would incorrectly merge them.
+
 
 
 **Q2. Prioritizing high‑frequency errors & impact of variant count per type.**
@@ -11,7 +13,7 @@ We sincerely thank our referees.
 
 - The number of variants per error type can influence performance improvements, as more training data typically leads to better model performance. While allocating more variants to specific errors may further improve results, we limit the total number of generated variants to ensure a fair comparison. Specifically, the fine-tuning data volume for our method does not exceed that of any baseline. Additionally, we allocate approximately equal numbers of variants per error type, assuming no prior knowledge of  error distributions of test scenarios.
 
-**Q3. Parsing errors.**
+**Q3. Error impacts.**
 - Parsing errors are defined as violations of the expected template structure, which cause logically identical logs to map to different templates. This structural inconsistency introduces noise that degrades downstream tasks. For example, if some instances treat a field as one variable and others as two, the logically identical logs yield different templates. This inconsistency disrupts anomaly detection models that rely on template frequencies or sequences. Logically identical logs may be mapped to different templates, which introduces noise into the training data and reduces detection accuracy.
 
 
