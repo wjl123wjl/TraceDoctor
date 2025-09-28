@@ -46,7 +46,7 @@ The test set used in this paper utilizes the official loghub-2.0 large-scale dat
 (1) Initial Dataset Analysis for Student Models
 ```
 cd Analyzer
-python log_analyzer.py --model_path "/root/models/llama-3-70b" --input_csv "/root/data/logs/system_logs.csv" --output_dir "/root/results/analysis_output" --batch_size 4 --temperature 0.01 --sample_size 1000 --max_length 4096 --max_new_tokens 1024 --gpu_ids 0 1 2 3
+python model_analyzer.py --model_path "/root/models/llama-3-70b" --input_csv "/root/data/logs/system_logs.csv" --output_dir "/root/results/analysis_output" --batch_size 4 --temperature 0.01 --sample_size 1000 --max_length 4096 --max_new_tokens 1024 --gpu_ids 0 1 2 3
 ```
   (2)   Error Set Generation
 ```
